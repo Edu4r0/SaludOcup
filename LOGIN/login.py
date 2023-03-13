@@ -9,11 +9,9 @@ from httplib2 import Http
 from datetime import date
 import customtkinter
 from PIL import Image
-import tkinter
+import tkinter.messagebox
 import wget
 import os
-
-#Hello Word
 
 #------------------VENTANA-----------------
 ventana = customtkinter.CTk()
@@ -29,7 +27,6 @@ ventana.geometry(posicion)
 ventana.overrideredirect(True)
 
 curr_date = str(date.today())
-print(curr_date)
 
 imagen_1 = customtkinter.CTkImage(light_image=Image.open("image/ergonomico1.png"), 
                                   dark_image=Image.open("image/ergonomico1.png"), size=(88, 85))
@@ -52,19 +49,14 @@ exit = customtkinter.CTkImage(light_image=Image.open("image/exit_black.png"),
 banner = customtkinter.CTkImage(light_image=Image.open("image/Vector.png"),
                                        dark_image=Image.open("image/Vector.png"), size=(279,646))
 #------------------FRAME-----------------
-frame = customtkinter.CTkFrame(ventana,width=331, height=495, corner_radius=10)
+frame = customtkinter.CTkFrame(ventana,width=331, height=495, corner_radius=15)
 frame.pack(padx=5, pady=15,anchor=tkinter.CENTER)
 
 ##------------------PANEL-----------------
 def panel():
     user = (usuario.get())
-    print(user)
-
-    passw = (contraseña.get())
-    print(passw)
-
-    if (user,passw) == ('e','e'):
-        print('CONTRASEÑA CORRECTA')
+    passw = (contraseña.get())  
+    if (user,passw) == ('admin','Isc2020++'):
         ventana.destroy()
         ventana_1 = customtkinter.CTk()
         alto = 683
@@ -77,7 +69,6 @@ def panel():
         ventana_1.maxsize(958,683)
         ventana_1.minsize(958,683)
         
-
         #--------------CONSULT FORMS ---------------------------------
         def consult_forms():
 
@@ -96,7 +87,7 @@ def panel():
                     forms_list = results.get('files', [])
                     return forms_list
                 except HttpError as error:
-                    print(f'An error occurred: {error}')
+                    tkinter.messagebox.showwarning(f'An error occurred: {error}')
                     return None
                 
             forms = get_forms()
@@ -133,11 +124,11 @@ def panel():
                 file = drive.CreateFile({'id': '1NEqWZtm67a56OlBaQGy05PPP48Nedb_a'})
                 file.SetContentFile(f'C:/Users/{username}/Documents/IMAGE/font.jpg')
                 file.Upload()
+                tkinter.messagebox.showinfo(message='Imagen subida')
 #-------------------------------------------------------------------------------------
         def consult_form_id():
             global respuest2
             obten = (entry_form.get())
-            print(obten)
             SCOPES = "https://www.googleapis.com/auth/forms.body.readonly"
             DISCOVERY_DOC = "https://forms.googleapis.com/$discovery/rest?version=v1"
 
@@ -152,9 +143,7 @@ def panel():
             form_id= str(obten)
             result = service.forms().get(formId=form_id).execute()
             respuest = result['linkedSheetId']
-            print(respuest)
             respuest2 = result['responderUri']
-            print(respuest2)
             text = linsheet_id_entry.insert(0,respuest)
             textunploadform = form_id_entry.insert(0, respuest2) 
           
@@ -170,58 +159,58 @@ def panel():
             file = (linsheet_Id.get())
             type_file= str(read_invar)
             descarga = wget.download(f'https://docs.google.com/spreadsheets/d/{file}/export?format={type_file}')
-            print(descarga)
+            tkinter.messagebox.showinfo(message='Descarga Completada')
         #---------------------------FRAMES---------------------------
 
-        frame_user = customtkinter.CTkFrame(ventana_1,height=646, width=279, corner_radius=10)
+        frame_user = customtkinter.CTkFrame(ventana_1,height=646, width=279, corner_radius=15)
         frame_user.place(x=14, y=15)
 
         label_banner = customtkinter.CTkLabel(frame_user, height=646, width=279, image=banner, text='')
         label_banner.pack(padx=2, pady=2)
 
-        appareance_button = customtkinter.CTkButton(frame_user, height=48, width=239, corner_radius=10,command=ventana_1.destroy,bg_color='#2A2A2A', text='', image=exit)
+        appareance_button = customtkinter.CTkButton(frame_user, height=48, width=239, corner_radius=15,command=ventana_1.destroy,bg_color='#2A2A2A', text='', image=exit)
         appareance_button.place(x=20, y=570)
 
         #-------------------------- CONSULT FORMS  FRAMES -------------
 
-        frame_consult= customtkinter.CTkFrame(ventana_1, height=154, width=301, corner_radius=10)
+        frame_consult= customtkinter.CTkFrame(ventana_1, height=154, width=301, corner_radius=15)
         frame_consult.place(x=326,y=63)
 
-        frame_consult1= customtkinter.CTkFrame(ventana_1, height=95, width=301, corner_radius=10)
+        frame_consult1= customtkinter.CTkFrame(ventana_1, height=95, width=301, corner_radius=15)
         frame_consult1.place(x=640,y=63)
 
-        button_item1 = customtkinter.CTkButton(frame_consult, height=30, width=241, text='' ,corner_radius=10)
+        button_item1 = customtkinter.CTkButton(frame_consult, height=30, width=241, text='' ,corner_radius=15)
         button_item1.place(x=356, y=24)
         
-        button_google_account = customtkinter.CTkButton(ventana_1, text='', height=48, width=154, corner_radius=10, image=google, command=consult_forms)
+        button_google_account = customtkinter.CTkButton(ventana_1, text='', height=48, width=154, corner_radius=15, image=google, command=consult_forms)
         button_google_account.place(x=640, y=169)
 
-        button_consult = customtkinter.CTkButton(ventana_1, text='', height=48, width=134, corner_radius=10, image=find, command=consult_form_id)
+        button_consult = customtkinter.CTkButton(ventana_1, text='', height=48, width=134, corner_radius=15, image=find, command=consult_form_id)
         button_consult.place(x=807, y=169)
 
         entry_form = customtkinter.StringVar()
-        entry_form_id = customtkinter.CTkEntry(frame_consult1, height=30, width=241, corner_radius=10, textvariable=entry_form, show='X')
+        entry_form_id = customtkinter.CTkEntry(frame_consult1, height=30, width=241, corner_radius=15, textvariable=entry_form)
         entry_form_id.place(x=30, y=40)
 
         form_id = customtkinter.CTkLabel(frame_consult1,height=17, width=49, text='FormID',font=('Bahnschrift SemiBold',14))
         form_id.place(x=30, y=10)
 
-        tex_name_id = customtkinter.CTkTextbox(frame_consult, height=135, width=284,corner_radius=10, font=('Bahnschrift SemiBold',14))
+        tex_name_id = customtkinter.CTkTextbox(frame_consult, height=135, width=284,corner_radius=15, font=('Bahnschrift SemiBold',14))
         tex_name_id.place(x=8, y=10)
 
         #--------------------------DOWNLOAD RESPONSES FRAMES ---------------------------------
 
-        frame_respomses= customtkinter.CTkFrame(ventana_1, height=154, width=304, corner_radius=10)
+        frame_respomses= customtkinter.CTkFrame(ventana_1, height=154, width=304, corner_radius=15)
         frame_respomses.place(x=329,y=285)
 
-        frame_respomses1= customtkinter.CTkFrame(ventana_1, height=95, width=301, corner_radius=10)
+        frame_respomses1= customtkinter.CTkFrame(ventana_1, height=95, width=301, corner_radius=15)
         frame_respomses1.place(x=640,y=285)
 
         linsheet_Id = customtkinter.StringVar()
-        linsheet_id_entry = customtkinter.CTkEntry(frame_respomses1, height=30, width=241, corner_radius=10, textvariable=linsheet_Id, show = 'X')
+        linsheet_id_entry = customtkinter.CTkEntry(frame_respomses1, height=30, width=241, corner_radius=15, textvariable=linsheet_Id, show = 'X')
         linsheet_id_entry.place(x=30, y=40)
         
-        responses_button = customtkinter.CTkButton(ventana_1, height=48, width=301, corner_radius=10,text='', image=dowload, command=response_get, fg_color='#35BD73')
+        responses_button = customtkinter.CTkButton(ventana_1, height=48, width=301, corner_radius=15,text='', image=dowload, command=response_get, fg_color='#35BD73')
         responses_button.place(x=640, y=391)
 
         linkSheet = customtkinter.CTkLabel(frame_respomses1, height=17, width=49, text='LinkSheeID',font=('Bahnschrift SemiBold',14))
@@ -246,7 +235,7 @@ def panel():
 
         #---------------------------FORMS------------------------------------------
 
-        frame_send = customtkinter.CTkFrame(ventana_1,height=174, width=615, corner_radius=10)
+        frame_send = customtkinter.CTkFrame(ventana_1,height=174, width=615, corner_radius=15)
         frame_send.place(x=326, y=487)
 
         form_unpload = customtkinter.StringVar()
@@ -256,25 +245,25 @@ def panel():
         form_id_entry_label = customtkinter.CTkLabel(frame_send,text='Fecha', height=17, width=49,font=('Bahnschrift SemiBold',14))
         form_id_entry_label.place(x=300,y=10)
 
-        form_id_entry = customtkinter.CTkEntry(frame_send,height=30, width=241, corner_radius=10, textvariable=form_unpload,font=('Bahnschrift SemiBold',14))
+        form_id_entry = customtkinter.CTkEntry(frame_send,height=30, width=241, corner_radius=15, textvariable=form_unpload,font=('Bahnschrift SemiBold',14))
         form_id_entry.place(x=40, y=35)
 
         
 
         fecha1 = customtkinter.StringVar()
-        fecha = customtkinter.CTkEntry(frame_send,height=30, width=85, corner_radius=10,font=('Bahnschrift SemiBold',14), textvariable=fecha1)
+        fecha = customtkinter.CTkEntry(frame_send,height=30, width=85, corner_radius=15,font=('Bahnschrift SemiBold',14), textvariable=fecha1)
         fecha.place(x=300, y=35)
 
         form_id_entry_label = customtkinter.CTkLabel(frame_send,text='Image Location', height=17, width=49,font=('Bahnschrift SemiBold',14))
         form_id_entry_label.place(x=40,y=90)
-        form_id_entry2 = customtkinter.CTkEntry(frame_send,height=30, width=241, corner_radius=10,placeholder_text='C:/USERS/DOCUMENTS/IMAGE',font=('Bahnschrift SemiBold',14))
+        form_id_entry2 = customtkinter.CTkEntry(frame_send,height=30, width=241, corner_radius=15,placeholder_text='C:/USERS/DOCUMENTS/IMAGE',font=('Bahnschrift SemiBold',14))
         form_id_entry2.configure(state='disabled')
         form_id_entry2.place(x=40, y=115)
 
-        unploadfromid = customtkinter.CTkButton(frame_send, height=48, width=200, corner_radius=10,text='', image=unpload,command=unpload_form)
+        unploadfromid = customtkinter.CTkButton(frame_send, height=48, width=200, corner_radius=15,text='', image=unpload,command=unpload_form)
         unploadfromid.place(x=400, y=20)
 
-        unploadimage = customtkinter.CTkButton(frame_send, height=48, width=301, corner_radius=10,text='', image=unpload,command=unpload_image)
+        unploadimage = customtkinter.CTkButton(frame_send, height=48, width=301, corner_radius=15,text='', image=unpload,command=unpload_image)
         unploadimage.place(x=300, y=100)
 
         consultforms = customtkinter.CTkLabel(ventana_1,height=25, width=194, text='CONSULTAR FORMULARIOS',font=('Bahnschrift SemiBold',14))
@@ -283,12 +272,12 @@ def panel():
         consultforms = customtkinter.CTkLabel(ventana_1,height=25, width=194, text='DESCARGAR RESPUESTAS',font=('Bahnschrift SemiBold',14))
         consultforms.place(x=334, y=249)
         
-        consultforms = customtkinter.CTkLabel(ventana_1,height=25, width=194, text='FORMULARIO SEND/ IMAGEN SEND',font=('Bahnschrift SemiBold',14))
+        consultforms = customtkinter.CTkLabel(ventana_1,height=25, width=194, text='ENVIAR FORMULARIO/ ENVIAR IMAGEN',font=('Bahnschrift SemiBold',14))
         consultforms.place(x=334, y=454)
 
         ventana_1.mainloop()   
     else:
-        print('CONTRASEÑA INCORRECTA') 
+        tkinter.messagebox.showinfo(message='Contraseña icorrecta') 
 
 #------------------LOGIN-----------------
 login = customtkinter.CTkLabel(ventana, height=40, width=236, font=('Bahnschrift SemiBold',32), text='Inicio de Sesion', bg_color='#2A2A2A')
